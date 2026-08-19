@@ -2,13 +2,10 @@ package com.swp391.cclearly.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "Orders")
@@ -38,41 +35,17 @@ public class Order {
   private BigDecimal finalAmount;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "coupon_id", referencedColumnName = "promotion_id")
+  @JoinColumn(name = "coupon_code", referencedColumnName = "code")
   private Promotion coupon;
-
-  @Column(name = "discount_amount", precision = 19, scale = 2)
-  private BigDecimal discountAmount;
-
-  @Column(name = "tracking_number", length = 100)
-  private String trackingNumber;
-
-  @CreationTimestamp
-  @Column(name = "created_at", updatable = false)
-  private Instant createdAt;
-
-  @Column(name = "is_preorder")
-  private Boolean isPreorder;
-
-  @Column(name = "preorder_deadline")
-  private LocalDate preorderDeadline;
-
-  @Column(name = "payment_type", length = 20)
-  private String paymentType; // DEPOSIT or FULL
-
-  @Column(name = "shipping_fee", precision = 19, scale = 2)
-  private BigDecimal shippingFee;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "address_id")
   private Address address;
 
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-  @Builder.Default
   private Set<OrderItem> orderItems = new HashSet<>();
 
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-  @Builder.Default
   private Set<Payment> payments = new HashSet<>();
 
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)

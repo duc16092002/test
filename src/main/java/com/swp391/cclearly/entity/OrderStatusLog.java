@@ -29,6 +29,6 @@ public class OrderStatusLog {
   @Column(name = "new_status", length = 50)
   private String newStatus;
 
-  @Column(name = "note", columnDefinition = "NVARCHAR(MAX)")
+  @Column(name = "note", columnDefinition = "TEXT")
   private String note;
 }

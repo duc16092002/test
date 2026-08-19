@@ -18,20 +18,9 @@ public class ContentBanner {
     @Column(name = "banner_id")
     private UUID bannerId;
 
-    @Column(name = "title", columnDefinition = "NVARCHAR(255)")
-    private String title;
-
-    @Column(name = "image_url", length = 500)
+    @Column(name = "image_url", length = 255)
     private String imageUrl;
 
     @Column(name = "position", length = 50)
     private String position;
-
-    @Builder.Default
-    @Column(name = "display_order")
-    private Integer displayOrder = 1;
-
-    @Builder.Default
-    @Column(name = "is_active")
-    private Boolean isActive = true;
 }
