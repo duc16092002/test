@@ -41,13 +41,10 @@ public class SecurityConfig {
           return corsConfig;
         }))
         .authorizeHttpRequests(auth -> auth
-            // 🔒 Auth endpoints that require authentication
-            .requestMatchers(HttpMethod.GET, "/api/auth/me").authenticated()
-
             // ✅ Public endpoints - Auth APIs
             .requestMatchers(
-                "/api/auth/**",
-                "/api/public/**",
+                "/api/v1/auth/**",
+                "/api/v1/public/**",
                 "/swagger-ui.html",
                 "/swagger-ui/**",
                 "/swagger-resources/**",
@@ -59,47 +56,32 @@ public class SecurityConfig {
 
             // ✅ Public GET endpoints - Products
             .requestMatchers(HttpMethod.GET,
-                "/api/products/**",
-                "/api/frames/**",
-                "/api/lenses/**",
-                "/api/accessories/**",
-                "/api/categories/**"
+                "/api/v1/products/**",
+                "/api/v1/frames/**",
+                "/api/v1/lenses/**",
+                "/api/v1/accessories/**",
+                "/api/v1/categories/**"
             ).permitAll()
 
-            // 🔒 Admin endpoints shared with Manager (dashboard, revenue, users)
-            .requestMatchers("/api/admin/dashboard/**").hasAnyRole("ADMIN", "MANAGER")
-            .requestMatchers("/api/admin/revenue/**").hasAnyRole("ADMIN", "MANAGER")
-            .requestMatchers("/api/admin/users/**").hasAnyRole("ADMIN", "MANAGER")
-
-            // 🔒 Admin only endpoints (settings, logs, etc.)
-            .requestMatchers("/api/admin/**").hasRole("ADMIN")
+            // 🔒 Admin only endpoints
+            .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
 
             // 🔒 Manager endpoints
-            .requestMatchers("/api/manager/**").hasAnyRole("ADMIN", "MANAGER")
+            .requestMatchers("/api/v1/manager/**").hasAnyRole("ADMIN", "MANAGER")
 
             // 🔒 Sales Staff endpoints
-            .requestMatchers(HttpMethod.POST, "/api/products/**").hasAnyRole("ADMIN", "MANAGER", "SALES_STAFF")
-            .requestMatchers(HttpMethod.PUT, "/api/products/**").hasAnyRole("ADMIN", "MANAGER", "SALES_STAFF")
-            .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasAnyRole("ADMIN", "MANAGER")
+            .requestMatchers(HttpMethod.POST, "/api/v1/products/**").hasAnyRole("ADMIN", "MANAGER", "SALES_STAFF")
+            .requestMatchers(HttpMethod.PUT, "/api/v1/products/**").hasAnyRole("ADMIN", "MANAGER", "SALES_STAFF")
+            .requestMatchers(HttpMethod.DELETE, "/api/v1/products/**").hasAnyRole("ADMIN", "MANAGER")
 
             // 🔒 Operation Staff endpoints
-            .requestMatchers("/api/inventory/**").hasAnyRole("ADMIN", "MANAGER", "OPERATION_STAFF")
-            .requestMatchers("/api/shipping/**").hasAnyRole("ADMIN", "MANAGER", "OPERATION_STAFF")
-
-            // 🔒 Returns/Refunds - Sales & Operation staff
-            .requestMatchers("/api/returns/**").hasAnyRole("ADMIN", "MANAGER", "SALES_STAFF", "OPERATION_STAFF")
-
-            // 🔒 Promotions - Admin & Manager
-            .requestMatchers("/api/promotions/**").hasAnyRole("ADMIN", "MANAGER")
-
-            // ✅ Banners - Active banners public, management Admin/Manager only
-            .requestMatchers(HttpMethod.GET, "/api/banners/active").permitAll()
-            .requestMatchers("/api/banners/**").hasAnyRole("ADMIN", "MANAGER")
+            .requestMatchers("/api/v1/inventory/**").hasAnyRole("ADMIN", "MANAGER", "OPERATION_STAFF")
+            .requestMatchers("/api/v1/shipping/**").hasAnyRole("ADMIN", "MANAGER", "OPERATION_STAFF")
 
             // 🔒 Customer endpoints
-            .requestMatchers("/api/users/**").hasAnyRole("CUSTOMER", "ADMIN", "MANAGER", "SALES_STAFF", "OPERATION_STAFF")
-            .requestMatchers("/api/orders/**").authenticated()
-            .requestMatchers("/api/cart/**").authenticated()
+            .requestMatchers("/api/v1/user/**").hasAnyRole("CUSTOMER", "ADMIN")
+            .requestMatchers("/api/v1/orders/**").authenticated()
+            .requestMatchers("/api/v1/cart/**").authenticated()
 
             // 🔒 All other requests require authentication
             .anyRequest().authenticated()
